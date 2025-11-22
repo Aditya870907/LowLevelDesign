@@ -1,0 +1,47 @@
+@startuml LRUCache
+
+' ============Classes=============
+class LRUCache{
+- capacity: int
+- map:Map<K, Node<K,V>>
+- dll:DoublyLinkedList<K,V>
+
++ get(K): V
++ put(K, V): void
++ remove(K): void
+}
+
+class DoublyLinkedList<K, V> {
+  - head: Node<K, V>
+  - tail: Node<K, V>
+
+  + moveToFront(node: Node<K, V>): void
+  + removeLast(): Node<K, V>
+  + remove(node: Node<K, V>): void
+  + addFirst(node: Node<K, V>): void
+}
+
+class Node<K, V> {
+  + key: K
+  + value: V
+  + prev: Node<K, V>
+  + next: Node<K, V>
+}
+
+class LRUCacheDemo {
+  + main(String[]): void
+}
+
+' =============Relationships=============
+' Composition
+LRUCache "1" *-- "1" DoublyLinkedList : owns
+LRUCache "1" *-- "1" Map : owns
+DoublyLinkedList *-- Node : nodes owned
+
+' Association
+LRUCache --> Node : uses
+DoublyLinkedList --> Node : operates on
+
+LRUCacheDemo --> LRUCache
+
+@enduml

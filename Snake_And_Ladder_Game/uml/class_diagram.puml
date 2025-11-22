@@ -1,0 +1,74 @@
+@startuml SnakeAndLadderGame
+
+skinparam classAttributeIconSize 0
+
+' ======================
+' ENUM
+' ======================
+enum GameStatus {
+    NOT_STARTED
+    RUNNING
+    FINISHED
+}
+
+' ======================
+' CORE CLASSES
+' ======================
+
+class Game {
+    - dice: Dice
+    - board: Board
+    - status: GameStatus
+    - players: Queue<Player>
+    - winner: Player
+
+    + takeTurn(player: Player): void
+    + play(): void
+}
+
+class Dice {
+    - minValue: int
+    - maxValue: int
+    + roll(): int
+}
+
+class Player {
+    - name: String
+    - position: int
+}
+
+class Board {
+    - size: int
+    - snakesAndLadders: Map<Integer, Integer>
+
+    + getFinalPosition(pos: int): int
+}
+
+abstract class BoardEntity {
+    - start: int
+    - end: int
+}
+
+class Snake
+class Ladder
+
+' ======================
+' RELATIONSHIPS
+' ======================
+
+' --- Composition (Strong “has-a”) ---
+Game *-- Board
+Game *-- Dice
+
+' --- Aggregation (Weak “has-a”) ---
+Game o-- Player 
+Board o-- BoardEntity
+
+' --- Inheritance ---
+Snake --|> BoardEntity
+Ladder --|> BoardEntity
+
+' --- Association ---
+Game --> GameStatus
+
+@enduml

@@ -1,0 +1,84 @@
+@startuml Bloom Filter
+
+'======================
+' ENUM
+'======================
+enum HashType {
+    FNV1A
+    DJB2
+}
+'=======================
+' INTERFACES & STRATEGIES
+'=======================
+interface HashStrategy {
+    + hash(data: str): int
+}
+
+class FNV1AHashStrategy {
+    + hash(data: str): int
+}
+
+class DJB2HashStrategy {
+    + hash(data: str): int
+}
+
+HashStrategy <|.. FNV1AHashStrategy
+HashStrategy <|.. DJB2HashStrategy
+
+
+'======================
+' FACTORY
+'======================
+class HashStrategyFactory {
+    + create(type: HashType): HashStrategy
+}
+
+HashStrategyFactory --> HashStrategy
+HashStrategyFactory --> HashType
+
+
+'======================
+' BLOOM FILTER
+'======================
+class BloomFilter {
+    - bit_set_size: int
+    - num_hash_functions: int
+    - bit_set: bitarray
+    - hash_strategies: List<HashStrategy>
+
+    + add(item: str)
+    + might_contain(item: str): bool
+}
+
+BloomFilter *-- HashStrategy
+BloomFilter *-- bitarray
+
+'======================
+' BUILDER (INNER CLASS)
+'======================
+class BloomFilterBuilder as "BloomFilter.Builder" {
+    - bit_set_size: int
+    - num_hash_functions: int
+    - strategies: List<HashStrategy>
+
+    + with_bit_set_size(size: int): Builder
+    + with_num_hash_functions(num: int): Builder
+    + with_hash_strategies(list): Builder
+    + build(): BloomFilter
+}
+
+BloomFilter o-- BloomFilterBuilder
+
+
+'======================
+' DEMO (CLIENT)
+'======================
+class BloomFilterDemo {
+    + main()
+}
+
+BloomFilterDemo --> BloomFilter
+BloomFilterDemo --> HashStrategyFactory
+BloomFilterDemo --> HashType
+
+@enduml
